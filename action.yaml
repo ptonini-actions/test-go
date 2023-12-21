@@ -1,0 +1,25 @@
+name: test-go
+description: ''
+inputs:
+  go_version:
+    description: ''
+    required: true
+  reports_folder:
+    description: ''
+    required: true
+  coverage_profile:
+    description: ''
+    required: true
+  test_report:
+    description: ''
+    required: true
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-go@v4
+      with:
+        go-version: ${{ inputs.go_version }}
+    - run: go mod tidy
+      shell: bash
+    - run: go test ./... -v -race -covermode atomic -coverprofile ${{ inputs.reports_folder }}/${{ inputs.coverage_profile }} -json | tee ${{ inputs.reports_folder }}/${{ inputs.test_report }}
+      shell: bash
